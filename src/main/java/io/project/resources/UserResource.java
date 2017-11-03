@@ -1,7 +1,7 @@
 package io.project.resources;
 
 import io.project.entity.User;
-import io.project.repository.UserRepository;
+import io.project.dao.IUserDAO;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -20,26 +20,28 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api")
-public class UserController {
+@RequestMapping("/api/private")
+public class UserResource {
 
-    private static final Logger log = LoggerFactory.getLogger(UserController.class);
+    private static final Logger log = LoggerFactory.getLogger(UserResource.class);
 
     @Autowired
-    private UserRepository userRepository;
+    private IUserDAO userDAO;
 
     @GetMapping(path = "/users", produces = "application/json;charset=UTF-8")
+    @SuppressWarnings("unchecked")
     public ResponseEntity<List<User>> findAllUsers() {
-       List<User> userList = userRepository.getList(0, 100);     
-       if(userList.isEmpty()){
-            return new ResponseEntity("User list is empty " , HttpStatus.NOT_FOUND);
-       }       
-       return new ResponseEntity<>(userList, HttpStatus.OK);
+        List<User> userList = userDAO.getList(0, 100);
+        if (userList.isEmpty()) {
+            return new ResponseEntity("User list is empty ", HttpStatus.NOT_FOUND);
+        }
+        return new ResponseEntity<>(userList, HttpStatus.OK);
     }
 
     @GetMapping(path = "/users/{id}", produces = "application/json;charset=UTF-8")
+    @SuppressWarnings("unchecked")
     public ResponseEntity findUser(@PathVariable("id") Long id) {
-        User user = userRepository.findById(id);
+        User user = userDAO.findById(id);
         if (user == null) {
             return new ResponseEntity("No Customer found for ID " + id, HttpStatus.NOT_FOUND);
         }
@@ -51,21 +53,22 @@ public class UserController {
             consumes = MediaType.APPLICATION_JSON_UTF8_VALUE,
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE
     )
+    @SuppressWarnings("unchecked")
     public ResponseEntity create(@RequestBody User user) {
-        User savedUser = userRepository.save(user);
+        User savedUser = userDAO.save(user);
         return new ResponseEntity(user, HttpStatus.OK);
     }
 
     @DeleteMapping("/users/{id}")
     public ResponseEntity delete(@PathVariable Long id) {
-        userRepository.delete(id);
+        userDAO.delete(id);
         return new ResponseEntity("user with " + id + " deleted", HttpStatus.OK);
     }
 
     @PutMapping("/users/update/{id}")
     @SuppressWarnings("unchecked")
     public ResponseEntity updateUserEmail(@PathVariable Long id, @RequestBody User user) {
-        int count = userRepository.updateEmail(id, user);
+        int count = userDAO.updateEmail(id, user);
         if (count == 0) {
             return new ResponseEntity("No Customer found for ID " + id, HttpStatus.NOT_FOUND);
         }
