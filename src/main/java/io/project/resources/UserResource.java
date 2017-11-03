@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -30,6 +32,7 @@ public class UserResource {
 
     @GetMapping(path = "/users", produces = "application/json;charset=UTF-8")
     @SuppressWarnings("unchecked")
+    @ResponseBody
     public ResponseEntity<List<User>> findAllUsers() {
         List<User> userList = userDAO.getList(0, 100);
         if (userList.isEmpty()) {
@@ -40,6 +43,8 @@ public class UserResource {
 
     @GetMapping(path = "/users/{id}", produces = "application/json;charset=UTF-8")
     @SuppressWarnings("unchecked")
+    @ResponseBody
+    @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public ResponseEntity findUser(@PathVariable("id") Long id) {
         User user = userDAO.findById(id);
         if (user == null) {
@@ -54,12 +59,14 @@ public class UserResource {
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE
     )
     @SuppressWarnings("unchecked")
+    @ResponseBody
     public ResponseEntity create(@RequestBody User user) {
         User savedUser = userDAO.save(user);
         return new ResponseEntity(user, HttpStatus.OK);
     }
 
     @DeleteMapping("/users/{id}")
+    @ResponseBody
     public ResponseEntity delete(@PathVariable Long id) {
         userDAO.delete(id);
         return new ResponseEntity("user with " + id + " deleted", HttpStatus.OK);
@@ -67,6 +74,7 @@ public class UserResource {
 
     @PutMapping("/users/update/{id}")
     @SuppressWarnings("unchecked")
+    @ResponseBody
     public ResponseEntity updateUserEmail(@PathVariable Long id, @RequestBody User user) {
         int count = userDAO.updateEmail(id, user);
         if (count == 0) {
@@ -76,3 +84,5 @@ public class UserResource {
     }
 
 }
+
+// http://www.baeldung.com/spring-mvc-controller-custom-http-status-code

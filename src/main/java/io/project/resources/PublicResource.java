@@ -17,11 +17,9 @@ public class PublicResource {
     @Autowired
     private IUserService userService;
 
-    /**
-     * GET METHODS
-     */
     @RequestMapping(method = RequestMethod.GET, value = "/users/{id}")
     @ResponseStatus(value = HttpStatus.OK)
+    @ResponseBody
     public User getUser(@PathVariable Long id) {
         User user = userService.find(id);
 
@@ -34,6 +32,7 @@ public class PublicResource {
 
     @RequestMapping(method = RequestMethod.GET, value = "/users")
     @ResponseStatus(value = HttpStatus.OK)
+    @ResponseBody
     public List<User> getUsers() {
         List<User> users = userService.findAll();
         if (users.isEmpty()) {
@@ -42,22 +41,16 @@ public class PublicResource {
         return users;
     }
 
-    /**
-     * POST METHODS
-     * @param user
-     * @return 
-     */
     @RequestMapping(method = RequestMethod.POST, value = "/users")
     @ResponseStatus(value = HttpStatus.OK)
+    @ResponseBody
     public User newUser(@RequestBody User user) throws BadRequestException {
         return userService.create(user);
     }
 
-    /**
-     * PUT/PATCH METHODS
-     */
     @RequestMapping(method = RequestMethod.PUT, value = "/users/{id}")
     @ResponseStatus(value = HttpStatus.OK)
+    @ResponseBody
     public User updateUser(@PathVariable Long id, @RequestBody User user) {
 
         if (!userService.exists(id)) {
@@ -68,13 +61,9 @@ public class PublicResource {
         return userService.save(user);
     }
 
-   
-    /**
-     * DELETE METHODS
-     * @param id
-     */
     @RequestMapping(method = RequestMethod.DELETE, value = "/users/{id}")
     @ResponseStatus(value = HttpStatus.OK)
+    @ResponseBody
     public void deleteUser(@PathVariable long id) {
         if (!userService.exists(id)) {
             throw new BadRequestException();
