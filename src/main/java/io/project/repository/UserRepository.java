@@ -3,9 +3,11 @@ package io.project.repository;
 import io.project.entity.User;
 import java.util.ArrayList;
 import java.util.List;
+import javax.persistence.Cacheable;
 
 import javax.persistence.EntityManager;
 import javax.persistence.Query;
+import org.hibernate.annotations.CacheConcurrencyStrategy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +40,7 @@ public class UserRepository {
     }
 
     @SuppressWarnings("unchecked")
+   
     public List<User> getList(Integer start, Integer max) {
         List<User> finalList = new ArrayList<>();
         try {          

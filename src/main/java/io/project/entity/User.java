@@ -8,6 +8,7 @@ package io.project.entity;
 import java.io.Serializable;
 import java.util.Date;
 import javax.persistence.Basic;
+import org.springframework.cache.annotation.Cacheable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -30,6 +31,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 @EqualsAndHashCode
+@Cacheable
 public class User implements Serializable {
 
     private static final long serialVersionUID = 1L;
