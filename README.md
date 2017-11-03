@@ -1,5 +1,5 @@
 # jpa-spring-mysql
-jpa-spring-mysql with second elevel cache
+jpa-spring-mysql with second level cache
 
 1. restore db dump
 2. edit application.yml
