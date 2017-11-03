@@ -29,8 +29,12 @@ public class UserController {
     private UserRepository userRepository;
 
     @GetMapping(path = "/users", produces = "application/json;charset=UTF-8")
-    public List<User> findAllUsers() {
-        return userRepository.getList(0, 100);
+    public ResponseEntity<List<User>> findAllUsers() {
+       List<User> userList = userRepository.getList(0, 100);     
+       if(userList.isEmpty()){
+            return new ResponseEntity("User list is empty " , HttpStatus.NOT_FOUND);
+       }       
+       return new ResponseEntity<>(userList, HttpStatus.OK);
     }
 
     @GetMapping(path = "/users/{id}", produces = "application/json;charset=UTF-8")
